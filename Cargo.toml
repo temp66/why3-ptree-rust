@@ -1,0 +1,14 @@
+[package]
+name = "why3-ptree"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bumpalo = "3.20.2"
+internment = { version = "0.8.6", default-features = false, features = ["arc"] }
+malachite = { version = "0.9.1", default-features = false, features = ["naturals_and_integers", "std"] }
+ocaml-format = { git = "https://github.com/temp66/ocaml-format-rust.git", version = "0.1.0" }
+serde = { version = "1.0.228", features = ["derive"], optional = true }
+
+[features]
+serde = ["dep:serde", "internment/serde", "malachite/enable_serde"]
