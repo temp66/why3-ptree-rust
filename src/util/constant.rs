@@ -1,3 +1,5 @@
+//! Constants
+//!
 //! * [`Constant`]
 //!
 //! Pretty-printing
