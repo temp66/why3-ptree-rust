@@ -205,7 +205,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn create() -> State {
+    pub fn new() -> State {
         State {
             modules: Vec::new(),
             module_id: None,
@@ -374,5 +374,11 @@ impl State {
             (None, None, [], _) => MlwFile::Decls(self.decls.into()),
             (None, None, _, _) => panic!(),
         }
+    }
+}
+
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
     }
 }
