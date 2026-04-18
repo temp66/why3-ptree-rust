@@ -3,6 +3,9 @@ name = "why3-ptree"
 version = "0.1.0"
 edition = "2024"
 
+[lints.clippy]
+type_complexity = "allow"
+
 [dependencies]
 bumpalo = "3.20.2"
 internment = { version = "0.8.6", default-features = false, features = ["arc"] }
