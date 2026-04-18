@@ -8,6 +8,17 @@
 //! ## Naming convention
 //!
 //! * [`Notation`]
+//! * [`op_infix`]
+//! * [`OP_TIGHT`]
+//! * [`op_prefix`]
+//! * [`op_get`]
+//! * [`op_set`]
+//! * [`op_update`]
+//! * [`op_cut`]
+//! * [`op_lcut`]
+//! * [`op_rcut`]
+//! * [`OP_EQU`]
+//! * [`OP_NEQ`]
 //! * [`sn_decode`]
 //!
 //! ## General purpose attributes
@@ -54,6 +65,44 @@ pub enum Notation {
 }
 
 // current encoding
+
+pub fn op_infix(s: &str) -> String {
+    format!("infix {s}")
+}
+
+pub fn op_prefix(s: &str) -> String {
+    format!("prefix {s}")
+}
+
+pub fn op_get(s: &str) -> String {
+    format!("mixfix []{s}")
+}
+
+pub fn op_set(s: &str) -> String {
+    format!("mixfix []<-{s}")
+}
+
+pub fn op_update(s: &str) -> String {
+    format!("mixfix [<-]{s}")
+}
+
+pub fn op_cut(s: &str) -> String {
+    format!("mixfix [..]{s}")
+}
+
+pub fn op_lcut(s: &str) -> String {
+    format!("mixfix [.._]{s}")
+}
+
+pub fn op_rcut(s: &str) -> String {
+    format!("mixfix [_..]{s}")
+}
+
+pub static OP_EQU: LazyLock<String> = LazyLock::new(|| op_infix("="));
+
+pub static OP_NEQ: LazyLock<String> = LazyLock::new(|| op_infix("<>"));
+
+pub const OP_TIGHT: fn(&str) -> String = op_prefix;
 
 fn print_sn<'a>(doc: &mut ocaml_format::Doc<'a>, w: &'a Notation) {
     fn lspace(p: &str) -> &str {
