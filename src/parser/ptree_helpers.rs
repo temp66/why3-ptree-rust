@@ -292,7 +292,7 @@ impl State {
         }
     }
 
-    // Useless
+    /// This is useless; it is likely a bug in the OCaml implementation.
     pub fn add_writes<I: IntoIterator<Item = Term>>(&mut self, w: I) {
         match &self.fun_head {
             None => panic!("add_pre: no function declaration in progress"),
