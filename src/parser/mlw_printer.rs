@@ -3571,7 +3571,7 @@ fn pp_decls<'a>(arena: &'a Bump, attr: bool) -> impl Fn(&mut Doc<'a>, &'a [Decl]
                     Doc::default(),
                     Doc::default(),
                     pp_decl(Some(attr), arena),
-                )(doc, x)
+                )(doc, x);
             },
             aux(decls, true, false),
         );
