@@ -25,12 +25,10 @@ fn test_M1() {
         let g = {
             let two = ptree_helpers::tconst(Position::default(), 2);
             let four = ptree_helpers::tconst(Position::default(), 4);
-            let add_int =
-                ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix("+").into()]));
+            let add_int = ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix("+")]));
             let two_plus_two =
                 ptree_helpers::tapp(Position::default(), add_int, Box::new([two.clone(), two]));
-            let eq_int =
-                ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix("=").into()]));
+            let eq_int = ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix("=")]));
             let goal_term =
                 ptree_helpers::tapp(Position::default(), eq_int, Box::new([four, two_plus_two]));
             Decl::Prop(
@@ -62,17 +60,17 @@ end",
 
 #[test]
 fn test_M6() {
-    let eq_symb = ptree_helpers::qualid(Box::new([ident::op_infix("=").into()]));
+    let eq_symb = ptree_helpers::qualid(Box::new([ident::op_infix("=")]));
     let int_type_id = ptree_helpers::qualid(Box::new(["int".into()]));
     let int_type = Pty::Tyapp(int_type_id, Box::new([]));
-    let ge_int = ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix(">=").into()]));
+    let ge_int = ptree_helpers::qualid(Box::new(["Int".into(), ident::op_infix(">=")]));
     let array_int_type = Pty::Tyapp(
         ptree_helpers::qualid(Box::new(["Array".into(), "array".into()])),
         Box::new([int_type]),
     );
     let length = ptree_helpers::qualid(Box::new(["Array".into(), "length".into()]));
-    let array_get = ptree_helpers::qualid(Box::new(["Array".into(), ident::op_get("").into()]));
-    let array_set = ptree_helpers::qualid(Box::new(["Array".into(), ident::op_set("").into()]));
+    let array_get = ptree_helpers::qualid(Box::new(["Array".into(), ident::op_get("")]));
+    let array_set = ptree_helpers::qualid(Box::new(["Array".into(), ident::op_set("")]));
 
     let mlw_file_I = {
         let mut i = State::new();

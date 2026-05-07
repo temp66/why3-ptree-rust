@@ -66,43 +66,43 @@ pub enum Notation {
 
 // current encoding
 
-pub fn op_infix(s: &str) -> String {
-    format!("infix {s}")
+pub fn op_infix(s: &str) -> Box<str> {
+    format!("infix {s}").into()
 }
 
-pub fn op_prefix(s: &str) -> String {
-    format!("prefix {s}")
+pub fn op_prefix(s: &str) -> Box<str> {
+    format!("prefix {s}").into()
 }
 
-pub fn op_get(s: &str) -> String {
-    format!("mixfix []{s}")
+pub fn op_get(s: &str) -> Box<str> {
+    format!("mixfix []{s}").into()
 }
 
-pub fn op_set(s: &str) -> String {
-    format!("mixfix []<-{s}")
+pub fn op_set(s: &str) -> Box<str> {
+    format!("mixfix []<-{s}").into()
 }
 
-pub fn op_update(s: &str) -> String {
-    format!("mixfix [<-]{s}")
+pub fn op_update(s: &str) -> Box<str> {
+    format!("mixfix [<-]{s}").into()
 }
 
-pub fn op_cut(s: &str) -> String {
-    format!("mixfix [..]{s}")
+pub fn op_cut(s: &str) -> Box<str> {
+    format!("mixfix [..]{s}").into()
 }
 
-pub fn op_lcut(s: &str) -> String {
-    format!("mixfix [.._]{s}")
+pub fn op_lcut(s: &str) -> Box<str> {
+    format!("mixfix [.._]{s}").into()
 }
 
-pub fn op_rcut(s: &str) -> String {
-    format!("mixfix [_..]{s}")
+pub fn op_rcut(s: &str) -> Box<str> {
+    format!("mixfix [_..]{s}").into()
 }
 
-pub static OP_EQU: LazyLock<String> = LazyLock::new(|| op_infix("="));
+pub static OP_EQU: LazyLock<Box<str>> = LazyLock::new(|| op_infix("="));
 
-pub static OP_NEQ: LazyLock<String> = LazyLock::new(|| op_infix("<>"));
+pub static OP_NEQ: LazyLock<Box<str>> = LazyLock::new(|| op_infix("<>"));
 
-pub const OP_TIGHT: fn(&str) -> String = op_prefix;
+pub const OP_TIGHT: fn(&str) -> Box<str> = op_prefix;
 
 fn print_sn<'a>(doc: &mut ocaml_format::Doc<'a>, w: &'a Notation) {
     fn lspace(p: &str) -> &str {
