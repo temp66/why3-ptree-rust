@@ -1478,11 +1478,7 @@ fn pp_partial(doc: &mut Doc, x: bool) {
             doc.atom("partial ");
             doc
         }),
-        Some({
-            let mut doc: Doc = Doc::new();
-            doc.atom("partial ");
-            doc
-        }),
+        Some(Doc::default()),
         doc,
         x,
     );

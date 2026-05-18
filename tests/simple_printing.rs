@@ -152,7 +152,7 @@ module M6
   use int.Int
   use array.Array
   
-  let partial f (a : Array.array int)
+  let f (a : Array.array int)
     requires { Int.( >= ) (a.Array.length) 1 }
     ensures { (Array.( [] ) a 0) = 42 }
   = Array.( []<- ) a 0 42
