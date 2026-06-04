@@ -2883,7 +2883,6 @@ fn pp_spec<'a>(
                 doc.space()
                     .print(pp_maybe_marker, *loc)
                     .atom("returns { ")
-                    .space()
                     .print_iter(
                         Some(|doc: &mut Doc| {
                             doc.atom("|");
