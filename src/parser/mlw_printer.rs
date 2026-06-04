@@ -240,11 +240,16 @@ fn pp_opt<'a, T>(
 fn pp_print_opt_list<'a, T, U, V: AsRef<[U]> + IntoIterator<Item = T>>(
     prefix: Doc<'a>,
     every: impl Borrow<Doc<'a>>,
-    sep: impl Borrow<Doc<'a>>,
+    sep: Option<Doc<'a>>,
     suffix: Doc<'a>,
     def: Doc<'a>,
     mut pp: impl FnMut(&mut Doc<'a>, T),
 ) -> impl FnOnce(&mut Doc<'a>, V) {
+    let sep = sep.unwrap_or({
+        let mut doc: Doc = Doc::new();
+        doc.atom(" ");
+        doc
+    });
     move |doc, x| match x.as_ref() {
         [] => {
             doc.extend(def);
@@ -255,7 +260,7 @@ fn pp_print_opt_list<'a, T, U, V: AsRef<[U]> + IntoIterator<Item = T>>(
                 pp(doc, x);
             };
             doc.extend(prefix)
-                .print_iter(Some(pp_sep(sep.borrow())), pp, x)
+                .print_iter(Some(pp_sep(&sep)), pp, x)
                 .extend(suffix);
         }
     }
@@ -401,7 +406,7 @@ fn pp_id(attr: bool) -> impl for<'a> Fn(&mut Doc<'a>, &'a Ident) {
                             doc
                         },
                         &Doc::default(),
-                        &Doc::default(),
+                        None,
                         Doc::default(),
                         Doc::default(),
                         pp_attr_,
@@ -907,7 +912,7 @@ fn pp_binders<'a>(arena: &'a Bump, attr: bool) -> impl FnOnce(&mut Doc<'a>, &'a 
             doc
         },
         Doc::default(),
-        Doc::default(),
+        None,
         Doc::default(),
         Doc::default(),
         pp_binder(arena, attr),
@@ -960,11 +965,11 @@ fn pp_comma_binders<'a>(attr: bool) -> impl FnOnce(&mut Doc<'a>, &'a [Binder]) {
             doc
         },
         Doc::default(),
-        {
+        Some({
             let mut doc: Doc = Doc::new();
             doc.atom(", ");
             doc
-        },
+        }),
         Doc::default(),
         Doc::default(),
         pp_comma_binder(attr),
@@ -1011,7 +1016,7 @@ fn pp_params<'a>(arena: &'a Bump, attr: bool) -> impl FnOnce(&mut Doc<'a>, &'a [
             doc
         },
         Doc::default(),
-        Doc::default(),
+        None,
         Doc::default(),
         Doc::default(),
         pp_param(arena, attr),
@@ -1305,7 +1310,7 @@ fn pp_clone_subst(attr: bool) -> impl for<'a> Fn(&mut Doc<'a>, &'a CloneSubst) {
                     doc.atom(" '");
                     doc
                 },
-                Doc::default(),
+                None,
                 Doc::default(),
                 Doc::default(),
                 pp_id(attr),
@@ -1370,11 +1375,11 @@ fn pp_substs<'a>(attr: bool) -> impl FnOnce(&mut Doc<'a>, &'a [CloneSubst]) {
             doc
         },
         Doc::default(),
-        {
+        Some({
             let mut doc: Doc = Doc::new();
             doc.atom(",").space();
             doc
-        },
+        }),
         Doc::default(),
         Doc::default(),
         pp_clone_subst(attr),
@@ -1436,11 +1441,11 @@ fn pp_match<'a, T>(
                     doc
                 },
                 &Doc::default(),
-                &{
+                Some({
                     let mut doc: Doc = Doc::new();
                     doc.space().atom("| ");
                     doc
-                },
+                }),
                 Doc::default(),
                 Doc::default(),
                 pp_reg_branch,
@@ -1455,11 +1460,11 @@ fn pp_match<'a, T>(
                     doc
                 },
                 &Doc::default(),
-                &{
+                Some({
                     let mut doc: Doc = Doc::new();
                     doc.space().atom("| exception ");
                     doc
-                },
+                }),
                 Doc::default(),
                 Doc::default(),
                 pp_exn_branch,
@@ -2434,11 +2439,11 @@ pub fn pp_term<'a>(arena: &'a Bump, attr: bool) -> Printers<'a, Term> {
                         pp_print_opt_list(
                             Doc::default(),
                             &Doc::default(),
-                            &{
+                            Some({
                                 let mut doc = Doc::new();
                                 doc.space();
                                 doc
-                            },
+                            }),
                             Doc::default(),
                             Doc::default(),
                             pp_op,
@@ -2498,11 +2503,11 @@ pub fn pp_term<'a>(arena: &'a Bump, attr: bool) -> Printers<'a, Term> {
                         doc
                     },
                     Doc::default(),
-                    {
+                    Some({
                         let mut doc: Doc = Doc::new();
                         doc.space().atom(" | ");
                         doc
-                    },
+                    }),
                     {
                         let mut doc: Doc = Doc::new();
                         doc.space().atom("]");
@@ -2790,11 +2795,11 @@ fn pp_invariants<'a>(arena: &'a Bump, attr: bool) -> impl FnOnce(&mut Doc<'a>, &
             doc
         },
         Doc::default(),
-        {
+        Some({
             let mut doc: Doc = Doc::new();
             doc.space();
             doc
-        },
+        }),
         Doc::default(),
         Doc::default(),
         pp_invariant,
@@ -2942,11 +2947,11 @@ fn pp_spec<'a>(
                 doc
             },
             &Doc::default(),
-            &{
+            Some({
                 let mut doc: Doc = Doc::new();
                 doc.space();
                 doc
-            },
+            }),
             Doc::default(),
             Doc::default(),
             pp_requires,
@@ -2957,11 +2962,11 @@ fn pp_spec<'a>(
                 pp_print_opt_list(
                     Doc::default(),
                     &Doc::default(),
-                    &{
+                    Some({
                         let mut doc: Doc = Doc::new();
                         doc.atom(",").space();
                         doc
-                    },
+                    }),
                     Doc::default(),
                     Doc::default(),
                     pp_term(arena, attr).marked,
@@ -2991,11 +2996,11 @@ fn pp_spec<'a>(
                 doc
             },
             &Doc::default(),
-            &{
+            Some({
                 let mut doc: Doc = Doc::new();
                 doc.space();
                 doc
-            },
+            }),
             Doc::default(),
             Doc::default(),
             pp_xpost,
@@ -3173,7 +3178,7 @@ fn pp_type_decl<'a>(arena: &'a Bump, attr: bool) -> impl Fn(&mut Doc<'a>, &'a Ty
                         doc.atom(" '");
                         doc
                     },
-                    &Doc::default(),
+                    None,
                     Doc::default(),
                     Doc::default(),
                     pp_id(attr),
@@ -3216,7 +3221,7 @@ fn pp_ind_decl<'a>(arena: &'a Bump, attr: bool) -> impl Fn(&mut Doc<'a>, &'a Ind
                         doc
                     },
                     &Doc::default(),
-                    &Doc::default(),
+                    None,
                     Doc::default(),
                     Doc::default(),
                     pp_param(arena, attr),
@@ -3240,11 +3245,11 @@ fn pp_logic_decl<'a>(arena: &'a Bump, attr: bool) -> impl Fn(&mut Doc<'a>, &'a L
                         doc
                     },
                     &Doc::default(),
-                    &{
+                    Some({
                         let mut doc: Doc = Doc::new();
                         doc.atom(" ");
                         doc
-                    },
+                    }),
                     Doc::default(),
                     Doc::default(),
                     pp_param(arena, attr),
@@ -3485,11 +3490,11 @@ pub fn pp_decl<'a>(attr: Option<bool>, arena: &'a Bump) -> impl Fn(&mut Doc<'a>,
                         doc
                     },
                     Doc::default(),
-                    {
+                    Some({
                         let mut doc: Doc = Doc::new();
                         doc.atom(", ");
                         doc
-                    },
+                    }),
                     Doc::default(),
                     Doc::default(),
                     pp_bind,
