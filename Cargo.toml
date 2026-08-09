@@ -1,6 +1,6 @@
 [package]
 name = "why3-ptree"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MIT or Apache-2.0"
 repository = "https://github.com/temp66/why3-ptree-rust"
@@ -13,11 +13,11 @@ all-features = true
 type_complexity = "allow"
 
 [dependencies]
-bumpalo = "3.20.2"
+bumpalo = "3.20.3"
 internment = { version = "0.8.6", default-features = false, features = ["arc"] }
-malachite = { version = "0.9.1", default-features = false, features = ["naturals_and_integers", "std"] }
+malachite = { version = "0.10.0", default-features = false, features = ["naturals_and_integers", "std"] }
 ocaml-format = "0.1.1"
-serde = { version = "1.0.228", features = ["derive"], optional = true }
+serde = { version = "1.0.229", features = ["derive"], optional = true }
 
 [features]
 serde = ["dep:serde", "internment/serde", "malachite/enable_serde"]
