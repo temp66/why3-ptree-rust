@@ -2,6 +2,12 @@
 name = "why3-ptree"
 version = "0.1.0"
 edition = "2024"
+license = "MIT or Apache-2.0"
+repository = "https://github.com/temp66/why3-ptree-rust"
+description = "A Rust port of the parse trees and related utilities from the Why3 OCaml API."
+
+[package.metadata.docs.rs]
+all-features = true
 
 [lints.clippy]
 type_complexity = "allow"
