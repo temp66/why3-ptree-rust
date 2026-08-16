@@ -32,7 +32,7 @@ use std::{
 };
 
 #[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 // To reduce memory consumption, a pair (line,col) is stored in a single
 //    int using
@@ -81,7 +81,6 @@ mod file_tags {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Position {
     file_tag: isize,
     // compressed line/col
@@ -93,6 +92,54 @@ pub struct Position {
 impl Default for Position {
     fn default() -> Self {
         *DUMMY_POSITION
+    }
+}
+
+#[cfg(feature = "serde")]
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+struct Position_<'a> {
+    file_name: &'a str,
+    start_line: isize,
+    start_col: isize,
+    end_line: isize,
+    end_col: isize,
+}
+
+#[cfg(feature = "serde")]
+impl Serialize for Position {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let (file_name, start_line, start_col, end_line, end_col) = get(*self);
+        Position_ {
+            file_name: &file_name,
+            start_line,
+            start_col,
+            end_line,
+            end_col,
+        }
+        .serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for Position {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let Position_ {
+            file_name,
+            start_line,
+            start_col,
+            end_line,
+            end_col,
+        } = Position_::deserialize(deserializer)?;
+        Ok(user_position(
+            file_name, start_line, start_col, end_line, end_col,
+        ))
     }
 }
 
