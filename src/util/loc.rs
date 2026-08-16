@@ -100,9 +100,13 @@ impl Default for Position {
 #[serde(rename_all = "kebab-case")]
 struct Position_<'a> {
     file_name: &'a str,
+    #[serde(default)]
     start_line: isize,
+    #[serde(default)]
     start_col: isize,
+    #[serde(default)]
     end_line: isize,
+    #[serde(default)]
     end_col: isize,
 }
 

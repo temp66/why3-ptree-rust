@@ -1,6 +1,6 @@
 [package]
 name = "why3-ptree"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 license = "MIT or Apache-2.0"
 repository = "https://github.com/temp66/why3-ptree-rust"
